@@ -10,6 +10,15 @@ area = 500
 while True:
     _,img = cam.read()
     text = "Normal"
+    img = imutils.resize(img,width=500)
+    grayImg = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+    gaussianImg = cv2.GaussianBlur(grayImg,(21,21),0)
+    if firstFrame is None:
+        firstFrame = gaussianImg
+        continue
+    imgDiff = cv2.absdiff(firstFrame,grayImg)
+    threshImg = cv2.threshold(imgDiff,25,255,cv2.THRESH_BINARY)[1]
+    threshImg = cv2.dilate(threshImg,None,iterations=2)
 
     cv2.imshow("my_cam",img)
     key = cv2.waitKey(1) & 0xFF
